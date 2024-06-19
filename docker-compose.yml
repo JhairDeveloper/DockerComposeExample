@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ketchup1234
+      MYSQL_DATABASE: pract8
+      MYSQL_USER: root
+      # MYSQL_PASSWORD: ketchup1234
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+
+volumes:
+  db-data:
