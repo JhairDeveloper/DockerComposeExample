@@ -7,7 +7,10 @@ services:
       MYSQL_ROOT_PASSWORD: ketchup1234
       MYSQL_DATABASE: pract8
       MYSQL_USER: root
-      # MYSQL_PASSWORD: ketchup1234
+      MYSQL_PASSWORD: ketchup1234
+    volumes:
+      - db-data:/var/lib/mysql
+
   backend:
     build: ./backend
     ports:
