@@ -1,26 +1,52 @@
 version: '3'
 
 services:
-  db:
-    image: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: ketchup1234
-      MYSQL_DATABASE: pract8
-      MYSQL_USER: root
-      MYSQL_PASSWORD: ketchup1234
+  backend2:
+    container_name: backend
+    build: ./backend2
+    working_dir: /code
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - db-data:/var/lib/mysql
-
-  backend:
-    build: ./backend
+      - .:/code
     ports:
-      - "8000:8000"
-    depends_on:
+      - '8000:8000'
+    expose:
+      - '8000'
+    links:
       - db
+    networks:
+      backend:
+        ipv4_address: 192.20.0.5
+
+  db:
+    container_name: db
+    image: 'mariadb'
+    volumes:
+      - ./database/data:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    networks:
+      backend:
+        ipv4_address: 192.20.0.6
+    environment:
+      MYSQL_DATABASE: pract8v2
+      MYSQL_ROOT_PASSWORD: ketchup1234
+
+
   frontend:
     build: ./frontend
     ports:
       - "3000:3000"
+    networks:
+      backend:
+        ipv4_address: 192.20.0.7
 
-volumes:
-  db-data:
+# volumes:
+#   db-data:
+
+networks:
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.20.0.0/24

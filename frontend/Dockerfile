@@ -1,20 +1,3 @@
-#CREADA PARA DESARROLLO
-#--------------------------------------------------------------------------
-# Ejemplo de Dockerfile para desarrollo
-# FROM node:18-alpine AS development
-
-# WORKDIR /app
-# COPY package*.json ./
-# RUN npm ci
-# COPY . .
-
-# EXPOSE 7000
-# CMD ["npm", "run","dev", "--", "-p", "7000"]
-# CMD ["npm", "run", "dev"]
-#--------------------------------------------------------------------------
-
-#----CREADA PARA PRODUCCION -------------
-
 FROM node:18-alpine AS build
 
 WORKDIR /app
