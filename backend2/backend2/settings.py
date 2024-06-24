@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-y49hp6r@+0)@xn3^@%2h^a3!!^01%9vn-=(-11l+tast3qk(vu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS= ['*']
 
 # Application definition
 
@@ -88,8 +88,8 @@ DATABASES = {
         'NAME': 'pract8v2',
         'USER': 'root',
         'PASSWORD': 'ketchup1234',
-        # 'HOST': 'db',
-        'HOST': 'localhost',
+        'HOST': 'db',
+        # 'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'",
