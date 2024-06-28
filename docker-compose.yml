@@ -1,48 +1,62 @@
 version: '3'
 
 services:
-  backend2:
-    container_name: backend
-    build: ./backend2
+
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=ketchup1234
+      - MYSQL_DATABASE=pract8v2
+      # - MYSQL_USER=root
+      # - MYSQL_PASSWORD=ketchup1234
+    volumes:
+      # - .insert_data.sql:/docker-entrypoint-initdb.d/insert_data.sql
+      - ./insert_data.sql:/docker-entrypoint-initdb.d/insert_data.sql
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      backend:
+        # ipv4_address: 192.20.0.6
+
+  wait-for-db:
+    image: atkrad/wait4x
+    depends_on:
+      - db
+    command: tcp db:3306 -t 60s -i 500ms
+    networks:
+      - backend
+
+  backend:
+    build:
+      context: ./backend2
+      dockerfile: Dockerfile
     working_dir: /code
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - .:/code
+      - ./backend2:/code
     ports:
       - '8000:8000'
-    expose:
-      - '8000'
-    links:
-      - db
     networks:
       backend:
-        ipv4_address: 192.20.0.5
-
-  db:
-    container_name: db
-    image: 'mariadb'
-    volumes:
-      - ./database/data:/var/lib/mysql
-    ports:
-      - '3306:3306'
-    networks:
-      backend:
-        ipv4_address: 192.20.0.6
-    environment:
-      MYSQL_DATABASE: pract8v2
-      MYSQL_ROOT_PASSWORD: ketchup1234
-
+        # ipv4_address: 192.20.0.5
+    depends_on:
+      wait-for-db:
+        condition: service_completed_successfully
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - '3000:3000'
     networks:
       backend:
-        ipv4_address: 192.20.0.7
+        # ipv4_address: 192.20.0.7
 
-# volumes:
-#   db-data:
+volumes:
+  mariadb_data:
 
 networks:
   backend:
@@ -50,3 +64,5 @@ networks:
     ipam:
       config:
         - subnet: 192.20.0.0/24
+
+
